@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Like;
+use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
 
 class LikesController extends Controller
 {
@@ -26,27 +28,25 @@ class LikesController extends Controller
             'post_id' => $id,
         ], 201);
     }
-
-
-    public function likeComment(Request $request, $id)
+    public function Updatelike(Request $request, $id)
     {
-        $data = $request->json()->all();
-        if (env('APP_ENV') == 'testing') {
-            $user_id = $data['user_id'];
+        $like = Like::where('user_id', auth()->user()->id)->where('post_id', $id)->first();
+
+        $isLiked = false;
+        if ($like) {
+            $like->delete();
         } else {
-            $user_id = auth()->user()->id;
+            Like::insert([
+                'user_id' => auth()->user()->id,
+                'post_id' => $id,
+            ]);
+            $isLiked = true;
         }
 
-        Like::insert([
-            'user_id' => $user_id,
-            'post_id' => $request->post_id,
-            'comment_id' => $id,
-        ]);
-
+        $count = Like::where('post_id', $id)->count();
         return response()->json([
-            'user_id' => $user_id,
-            'post_id' => $request->post_id,
-            'comment_id' => $id,
+            "nblike" => $count,
+            "isLiked" => $isLiked
         ], 201);
     }
 }

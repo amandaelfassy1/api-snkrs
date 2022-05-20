@@ -36,6 +36,7 @@ class PostsController extends Controller
             $userInfo = User::where('id', $post->user_id)->first();
             $likes = Like::where('post_id', $post->id)->get();
             $comments = Comment::where('post_id', $post->id)->get();
+            $countLikes = Like::where('post_id', $post->id)->count();
             $likeExist = Like::where([
                 ['post_id', '=', $post->id],
                 ['user_id', '=', $user_id]
@@ -62,7 +63,9 @@ class PostsController extends Controller
 
             if ($user_id !== null) {
                 $post['likeExist'] = $likeExist;
+                $post['nblike'] = $countLikes;
             }
+
 
             array_push($arrayPosts, $post);
         }

@@ -7,7 +7,10 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\UserEditRequest;
+use App\Models\Comment;
 use App\Models\Followers;
+use App\Models\Like;
+use App\Models\Post;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 
@@ -50,22 +53,19 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
 
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                "error" => "Les identifiants ne sont pas corrects"
+                "message" => "Les identifiants ne sont pas corrects"
             ], 401);
         }
 
         $user->tokens()->where('tokenable_id',  $user->id)->delete();
 
-        $token = $user->createToken("kodiweb")->plainTextToken;
+        $token = $user->createToken("snkrsweb")->plainTextToken;
+
 
         $user = [
             "id" => $user->id,
@@ -75,6 +75,7 @@ class UserController extends Controller
             "email" => $user->email,
             "created_at" => $user->created_at,
             "biography" => $user->biography,
+            "img_url" => $user->img_url,
         ];
 
         return response()->json([
@@ -82,6 +83,8 @@ class UserController extends Controller
             "message" => "Tu es maintenant connecté"
         ], 200);
     }
+
+
 
     public function me(Request $request)
     {
@@ -125,17 +128,25 @@ class UserController extends Controller
             return response()->json(["message" => 'Forbidden'], 403);
         }
 
-        $user->email = $request->get('email');
-        $user->first_name = $request->get('first_name');
-        $user->last_name = $request->get('last_name');
-        $user->biography = $request->get('biography');
+        // dd($request);
+        $request->validate([
+            'email' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'biography' => 'required',
+        ]);
+
+
+        $user->email = $request->email;
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->biography = $request->biography;
 
         if ($request->has('img')) {
 
             $uploadedFileUrl = Cloudinary::upload($request->img->getRealPath())->getSecurePath();
             $user->img_url = $uploadedFileUrl;
         }
-
 
         $user->fill($request->all());
 

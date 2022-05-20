@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFollowerTable extends Migration
+class CreateLikeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateFollowerTable extends Migration
      */
     public function up()
     {
-        Schema::table('followers', function (Blueprint $table) {
-            $table->dropColumn('id');
-            $table->primary(['user_id', 'followers_id']);
+        Schema::create('likes', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->foreignId('post_id');
+            $table->foreignId('comment_id')->nullable();
+            $table->foreignId('user_id');
         });
     }
 
@@ -26,6 +29,6 @@ class CreateFollowerTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('followers');
+        Schema::dropIfExists('likes');
     }
 }

@@ -35,16 +35,21 @@ Route::middleware('auth:sanctum')->delete('auth/post/delete/{id}', [PostsControl
 
 Route::middleware('auth:sanctum')->post('auth/post/like/post/{id}', [LikesController::class, 'likePost']);
 Route::middleware('auth:sanctum')->post('auth/post/like/comment/{id}', [LikesController::class, 'likeComment']);
+Route::middleware('auth:sanctum')->put('auth/post/like/update/{id}', [LikesController::class, 'updateLike']);
 
 Route::middleware('auth:sanctum')->post('auth/user/followers/{id}', [FollowersController::class, 'followers']);
+
 Route::middleware('auth:sanctum')->get('auth/user/followers/{id}', [FollowersController::class, 'getFollowers']);
+
 Route::middleware('auth:sanctum')->get('auth/user/followers/{id}/count', [FollowersController::class, 'countFollowers']);
+Route::middleware('auth:sanctum')->get('auth/user/following/{id}/count', [FollowersController::class, 'countFollowing']);
+Route::middleware('auth:sanctum')->put('auth/user/follower/update/{id}', [FollowersController::class, 'updateFollowers']);
 
 
 Route::post('auth/register', [UserController::class, 'register']);
 Route::post('auth/login', [UserController::class, 'login']);
 
-Route::middleware('auth:sanctum')->put('auth/update/{id}', [UserController::class, 'update']);
+Route::middleware('auth:sanctum')->post('auth/update/{id}', [UserController::class, 'update']);
 Route::middleware('auth:sanctum')->post('auth/me', [UserController::class, 'me']);
 Route::get('auth/user/{id}', [UserController::class, 'userInfo']);
 Route::middleware('auth:sanctum')->post('auth/logout', [UserController::class, 'logout']);
