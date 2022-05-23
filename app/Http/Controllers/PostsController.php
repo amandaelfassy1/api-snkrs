@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\PostService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Like;
@@ -12,12 +13,18 @@ use App\Models\Comment;
 
 class PostsController extends Controller
 {
+    public function __construct(protected PostService $service)
+    {
+
+    }
+
     public function showProfilUser(Request $request)
     {
-        $user_id = $request->user()->id;
+        $userId = auth()->id();
         $post = Post::with("user")
-            ->where('user_id', $user_id)->get();
-        return response()->json($post, 200);
+            ->where('user_id', $userId)->get();
+
+        return response()->json($post);
     }
     public function show(Request $request)
     {
@@ -29,47 +36,9 @@ class PostsController extends Controller
 
     public function index()
     {
-        $user_id = auth()?->user()?->id;
-        $posts = Post::orderBy('created_at', 'desc')->get()->all();
-        $arrayPosts = [];
-        foreach ($posts as $post) {
-            $userInfo = User::where('id', $post->user_id)->first();
-            $likes = Like::where('post_id', $post->id)->get();
-            $comments = Comment::where('post_id', $post->id)->get();
-            $countLikes = Like::where('post_id', $post->id)->count();
-            $likeExist = Like::where([
-                ['post_id', '=', $post->id],
-                ['user_id', '=', $user_id]
-            ])->exists();
-
-            $arrayComments = [];
-            foreach ($comments as $comment) {
-                $commentInfo = Post::where('user_id', $comment->user_id)->first();
-                $likesComment = Like::where('comment_id', $comment->id)->get();
-
-                array_push($arrayComments, [
-                    "author" => $commentInfo,
-                    "comment" => $comment,
-                    "likes" => $likesComment,
-                ]);
-            }
-
-            $post = [
-                "author" => $userInfo,
-                "posts" => $post,
-                "likes" => $likes,
-                "comments" => $arrayComments,
-            ];
-
-            if ($user_id !== null) {
-                $post['likeExist'] = $likeExist;
-                $post['nblike'] = $countLikes;
-            }
-
-
-            array_push($arrayPosts, $post);
-        }
-        return response()->json($arrayPosts, 200);
+        return response()->json([
+            'posts' => $this->service->getPosts()
+        ]);
     }
 
     public function create(Request $request)

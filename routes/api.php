@@ -24,13 +24,14 @@ use App\Http\Controllers\LikesController;
 // });
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
-    Route::get('auth/posts', [PostsController::class, 'index']);
-    Route::get('auth/posts/user', [PostsController::class, 'showProfilUser']);
-    Route::get('auth/posts/user/{user_id}', [PostsController::class, 'show']);
-    Route::get('auth/post/{id}', [PostsController::class, 'showById']);
-    Route::get('auth/search/{key}', [PostsController::class, 'search']);
-    Route::post('auth/post', [PostsController::class, 'create']);
-
+    Route::controller(PostsController::class)->prefix('auth')->group(function () {
+        Route::get('posts', 'index');
+        Route::get('posts/user', 'showProfilUser');
+        Route::get('posts/user/{user_id}', 'show');
+        Route::get('post/{id}', 'showById');
+        Route::get('search/{key}', 'search');
+        Route::post('post', 'create');
+    });
 
     Route::post('auth/post/comment/{id}', [CommentsController::class, 'create']);
     Route::delete('auth/post/delete/{id}', [PostsController::class, 'delete']);
