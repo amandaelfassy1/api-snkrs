@@ -24,7 +24,7 @@ use App\Http\Controllers\LikesController;
 // });
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
-    Route::controller(PostsController::class)->group(['prefix' => 'auth'], function () {
+    Route::controller(PostsController::class)->prefix('auth')->group(function () {
         Route::get('posts', 'index');
         Route::get('posts/user', 'showProfilUser');
         Route::get('posts/user/{user_id}', 'show');
