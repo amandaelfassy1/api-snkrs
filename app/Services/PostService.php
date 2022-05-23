@@ -2,10 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Comment;
-use App\Models\Like;
 use App\Models\Post;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
 class PostService
