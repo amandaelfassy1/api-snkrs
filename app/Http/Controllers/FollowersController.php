@@ -25,7 +25,7 @@ class FollowersController extends Controller
 
         $count = Followers::where('followers_id', $id)->count();
         return response()->json([
-            "nbfollowers" => $count,
+            "nbFollowers" => $count,
             "subscribe" => $subscribe
         ], 201);
     }

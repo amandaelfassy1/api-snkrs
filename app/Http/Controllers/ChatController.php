@@ -16,27 +16,23 @@ class ChatController extends Controller
         return Message::with('user')->get();
     }
 
-    public function privateMessages($user)
-    {
-        $privateCommunication = Message::with('user')
-            ->where(['user_id' => auth()->id(), 'receiver_id' => $user->id])
-            ->orWhere(function ($query) use ($user) {
-                $query->where(['user_id' => $user->id, 'receiver_id' => auth()->id()]);
-            })
-            ->get();
-
-        return $privateCommunication;
-    }
-
-    public function sendPrivateMessage(Request $request, User $user)
+    public function sendPrivateMessage(Request $request)
     {
 
         $input = $request->all();
-        $input['receiver_id'] = $user->id;
+        // $input['receiver_id'] = auth()->user()->id;
         $message = auth()->user()->messages()->create($input);
 
         broadcast(new PrivateMessageSent($message->load('user')))->toOthers();
 
-        return response(['status' => 'Message private sent successfully', 'message' => $message]);
+        return response(
+            ['status' => 'Message private sent successfully', 'message' => $message]
+
+        );
+    }
+    public function allDiscussion(Request $request, $id)
+    {
+        $count = Message::where('receiver_id', $id)->count();
+        return response()->json($count, 200);
     }
 }

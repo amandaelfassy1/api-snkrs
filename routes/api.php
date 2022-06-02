@@ -31,7 +31,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('auth/search/{key}', [PostsController::class, 'search']);
     Route::post('auth/post', [PostsController::class, 'create']);
 
-
     Route::post('auth/post/comment/{id}', [CommentsController::class, 'create']);
     Route::delete('auth/post/delete/{id}', [PostsController::class, 'delete']);
 
@@ -40,17 +39,17 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('auth/user/followers/{id}', [FollowersController::class, 'followers']);
     Route::get('auth/user/followers/{id}', [FollowersController::class, 'getFollowers']);
 
-    Route::get('auth/user/followers/{id}/count', [FollowersController::class, 'countFollowers']);
-    Route::get('auth/user/following/{id}/count', [FollowersController::class, 'countFollowing']);
     Route::put('auth/user/follower/update/{id}', [FollowersController::class, 'updateFollowers']);
 
-
+    Route::get('discussion/{id}', [ChatController::class, 'allDiscussion']);
     Route::get('messages', [ChatController::class, 'fetchMessages']);
     Route::post('messages', [ChatController::class, 'sendPrivateMessage']);
 
+    Route::get('auth/users', [UserController::class, 'allUser']);
     Route::post('auth/update/{id}', [UserController::class, 'update']);
     Route::post('auth/me', [UserController::class, 'me']);
     Route::get('auth/user/{id}', [UserController::class, 'userInfo']);
+    Route::get('auth/user/{id}', [UserController::class, 'userInfoPublic']);
     Route::post('auth/logout', [UserController::class, 'logout']);
 });
 

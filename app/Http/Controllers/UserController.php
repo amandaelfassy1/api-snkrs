@@ -100,6 +100,33 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function userInfoPublic(Request $request, $id)
+    {
+        $userInfo = User::where('id', $id)->first();
+        if (!$userInfo) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+        $exist = Followers::where('followers_id', $userInfo->id)->where('user_id', auth()->user()->id)->first();
+        $user = [
+            "user_id" => $userInfo->id,
+            "first_name" => $userInfo->first_name,
+            "last_name" => $userInfo->last_name,
+            "biography" => $userInfo->biography,
+            "img_url" => $userInfo->img_url,
+            "nbPost" => $userInfo->posts()->count(),
+            "nbFollowers" => $userInfo->followers()->count(),
+            "nbLikes" => $userInfo->likes()->count(),
+            "isSusbscribe" => $exist ? true : false
+        ];
+
+        return response()->json(
+            $user
+
+        );
+    }
+
+
+
     public function userInfo(Request $request, $id)
     {
         $user = User::find($id);
@@ -114,7 +141,11 @@ class UserController extends Controller
 
         ], 200);
     }
-
+    public function allUser()
+    {
+        $users = User::orderBy('created_at', 'desc')->get()->all();
+        return ($users);
+    }
 
     public function update($id, Request $request)
     {
