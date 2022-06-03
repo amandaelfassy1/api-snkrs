@@ -14,7 +14,6 @@ class FollowersController extends Controller
         $followers = Followers::where('user_id', auth()->user()->id)->where('follower_id', $id)->first();
         $subscribe = false;
 
-        dd($id);
         if ($followers) {
             $followers->delete();
         } else {
