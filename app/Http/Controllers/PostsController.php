@@ -47,7 +47,7 @@ class PostsController extends Controller
             ])->exists();
 
             $followerExist = Followers::where([
-                ['followers_id', '=', $post->id],
+                ['follower_id', '=', $post->id],
                 ['user_id', '=', $user_id]
             ])->exists();
 
