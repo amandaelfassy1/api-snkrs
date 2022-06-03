@@ -12,7 +12,7 @@ use App\Models\Followers;
 use App\Models\Like;
 use App\Models\Post;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -106,7 +106,8 @@ class UserController extends Controller
         if (!$userInfo) {
             return response()->json(['message' => 'Not found'], 404);
         }
-        $exist = Followers::where('followers_id', $userInfo->id)->where('user_id', auth()->user()->id)->first();
+        $exist = Followers::where('follower_id', $userInfo->id)->where('user_id', auth()->user()->id)->first();
+        $nbFollowers = Followers::where('follower_id', $userInfo->id)->count();
         $user = [
             "user_id" => $userInfo->id,
             "first_name" => $userInfo->first_name,
@@ -114,7 +115,8 @@ class UserController extends Controller
             "biography" => $userInfo->biography,
             "img_url" => $userInfo->img_url,
             "nbPost" => $userInfo->posts()->count(),
-            "nbFollowers" => $userInfo->followers()->count(),
+            "nbFollowers" => $nbFollowers,
+            "nbFollowing" => $userInfo->following()->count(),
             "nbLikes" => $userInfo->likes()->count(),
             "isSusbscribe" => $exist ? true : false
         ];
