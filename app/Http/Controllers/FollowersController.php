@@ -18,7 +18,7 @@ class FollowersController extends Controller
         } else {
             Followers::insert([
                 'user_id' => auth()->user()->id,
-                'follower_id' => $id,
+                'follower_id' => intval($id),
             ]);
             $subscribe = true;
         }
