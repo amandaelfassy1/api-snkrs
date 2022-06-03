@@ -14,7 +14,7 @@ class AddPriceColumn extends Migration
     public function up()
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->float('price')->default(0.00);
+            $table->float('price')->nullable();
         });
     }
 
@@ -25,6 +25,8 @@ class AddPriceColumn extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropColumn('price');
+        });
     }
 }
