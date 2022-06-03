@@ -33,7 +33,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::post('auth/post/comment/{id}', [CommentsController::class, 'create']);
     Route::delete('auth/post/delete/{id}', [PostsController::class, 'delete']);
-
+    Route::delete('auth/post/buy/{id}', [PostsController::class, 'buy']);
     Route::put('auth/post/like/update/{id}', [LikesController::class, 'updateLike']);
 
     Route::post('auth/user/followers/{id}', [FollowersController::class, 'followers']);

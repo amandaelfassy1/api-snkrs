@@ -125,8 +125,6 @@ class UserController extends Controller
         );
     }
 
-
-
     public function userInfo(Request $request, $id)
     {
         $user = User::find($id);

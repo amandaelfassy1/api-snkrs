@@ -133,6 +133,18 @@ class PostsController extends Controller
 
         return response()->json(['message' => "Post supprimé"], 200);
     }
+
+    public function buy($id)
+    {
+        $post = Post::where('id', '=', $id)->delete();
+
+        if (!$post) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+
+        return response()->json(['message' => "Elle est à vous !"], 200);
+    }
+
     public function allPostUser(Request $request, $id)
     {
         $user_id = $request->user()->id;
