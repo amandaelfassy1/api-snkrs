@@ -9,7 +9,7 @@ use App\Models\User;
 class Followers extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id'];
+    protected $fillable = ['user_id', 'follower_id'];
 
     public function user()
     {
