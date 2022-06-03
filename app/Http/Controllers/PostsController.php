@@ -103,6 +103,7 @@ class PostsController extends Controller
         Post::insert([
             'user_id' => $user_id,
             'body' => $request->body,
+            'price' => $request->price,
             'img' => $img_url,
         ]);
 
