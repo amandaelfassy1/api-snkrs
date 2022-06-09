@@ -150,10 +150,10 @@ class UserController extends Controller
     public function update($id, Request $request)
     {
         $user = User::find($id);
-
         if (!$user) {
             return response()->json(['message' => 'Not found'], 404);
         }
+
 
         if ($user->id != $request->user()->id) {
             return response()->json(["message" => 'Forbidden'], 403);
@@ -161,7 +161,7 @@ class UserController extends Controller
 
         // dd($request);
         $request->validate([
-            'email' => 'required',
+            'email' => 'required|string|email|unique:users',
             'first_name' => 'required',
             'last_name' => 'required',
             'biography' => 'required',
