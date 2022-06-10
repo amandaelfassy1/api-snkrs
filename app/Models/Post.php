@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Post extends Model
 {
     use HasFactory;
-    protected $fillable = ['body', 'price', 'user_id'];
+    protected $fillable = ['body', 'price', 'user_id', 'img'];
 
     public function user()
     {

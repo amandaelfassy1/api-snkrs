@@ -209,4 +209,32 @@ class PostsController extends Controller
         }
         return response()->json($arrayPosts, 200);
     }
+
+
+    public function updatePost($id, Request $request)
+    {
+        $post = Post::find($id);
+        if (!$post) {
+            return response()->json(['message' => 'Not found'], 404);
+        }
+
+        $request->validate([
+            'body' => 'required'
+        ]);
+
+        $post->body = $request->body;
+        if ($request->has('img_url')) {
+            $uploadedFileUrl = Cloudinary::upload($request->img_url->getRealPath())->getSecurePath();
+            $post->img = $uploadedFileUrl;
+        }
+
+        $post->fill($request->all());
+        $post->save();
+
+
+        return response()->json([
+            'post' => $post,
+            "message" => "Ton post a été mis à jour"
+        ], 200);
+    }
 }

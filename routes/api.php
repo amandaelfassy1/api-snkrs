@@ -30,6 +30,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('auth/post/{id}', [PostsController::class, 'showById']);
     Route::get('auth/search/{key}', [PostsController::class, 'search']);
     Route::post('auth/post', [PostsController::class, 'create']);
+    Route::post('auth/post/update/{id}', [PostsController::class, 'updatePost']);
 
     Route::post('auth/post/comment/{id}', [CommentsController::class, 'create']);
     Route::delete('auth/post/delete/{id}', [PostsController::class, 'delete']);
