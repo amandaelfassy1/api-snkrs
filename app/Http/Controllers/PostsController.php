@@ -23,7 +23,7 @@ class PostsController extends Controller
     public function show(Request $request)
     {
         $user_id = $request->user_id;
-        $post = Post::with("user")
+        $post = Post::orderBy('created_at', 'desc')->with("user")
             ->where('user_id', $user_id)->get();
         return response()->json($post, 200);
     }
