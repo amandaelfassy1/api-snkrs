@@ -161,7 +161,7 @@ class UserController extends Controller
 
         // dd($request);
         $request->validate([
-            'email' => 'required|string|email|unique:users',
+            'email' => 'required|string|email',
             'first_name' => 'required',
             'last_name' => 'required',
             'biography' => 'required',
