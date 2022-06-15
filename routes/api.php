@@ -34,12 +34,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::post('auth/post/comment/{id}', [CommentsController::class, 'create']);
     Route::delete('auth/post/delete/{id}', [PostsController::class, 'delete']);
+
     Route::delete('auth/post/buy/{id}', [PostsController::class, 'buy']);
+
     Route::put('auth/post/like/update/{id}', [LikesController::class, 'updateLike']);
-
-    Route::post('auth/user/followers/{id}', [FollowersController::class, 'followers']);
-    Route::get('auth/user/followers/{id}', [FollowersController::class, 'getFollowers']);
-
     Route::put('auth/user/follower/update/{id}', [FollowersController::class, 'updateFollowers']);
 
     Route::get('discussion/{id}', [ChatController::class, 'allDiscussion']);
@@ -47,10 +45,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('messages', [ChatController::class, 'sendPrivateMessage']);
 
     Route::get('auth/users', [UserController::class, 'allUser']);
+    Route::get('auth/users/{key}', [UserController::class, 'search']);
     Route::post('auth/update/{id}', [UserController::class, 'update']);
     Route::post('auth/me', [UserController::class, 'me']);
     Route::get('auth/user/{id}', [UserController::class, 'userInfo']);
     Route::get('auth/user/{id}', [UserController::class, 'userInfoPublic']);
+
+    Route::post('auth/checkout', [PaymentController::class, 'checkout']);
+
     Route::post('auth/logout', [UserController::class, 'logout']);
 });
 

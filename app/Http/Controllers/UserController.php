@@ -199,4 +199,9 @@ class UserController extends Controller
 
         return response()->json(null, 204);
     }
+    public function search($key)
+    {
+        $users = User::where('first_name', 'LIKE', "%$key%")->orderBy('created_at', 'desc')->get()->all();
+        return response()->json($users, 200);
+    }
 }
