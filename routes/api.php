@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\LikesController;
+use App\Http\Controllers\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -50,10 +51,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('auth/me', [UserController::class, 'me']);
     Route::get('auth/user/{id}', [UserController::class, 'userInfo']);
     Route::get('auth/user/{id}', [UserController::class, 'userInfoPublic']);
-
-    Route::post('auth/checkout', [PaymentController::class, 'checkout']);
-
     Route::post('auth/logout', [UserController::class, 'logout']);
+
+
+    Route::post('auth/checkout', [PaymentController::class, 'intent']);
 });
 
 Route::post('auth/register', [UserController::class, 'register']);

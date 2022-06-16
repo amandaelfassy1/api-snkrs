@@ -6,31 +6,26 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
-    // public function checkout(Request $request, Response $response)
-    // {
-    //     Stripe::setApiKey('sk_test_VePHdqKTYQjKNInc7u56JBrQ');
-    //     $customer = Customer::create();
-    //     $ephemeralKey = EphemeralKey::create(
-    //         [
-    //             'customer' => $customer->id,
-    //         ],
-    //         [
-    //             'stripe_version' => '2020-08-27',
-    //         ]
-    //     );
-    //     $paymentIntent = PaymentIntent::create([
-    //         'amount' => 1099,
-    //         'currency' => 'eur',
-    //         'customer' => $customer->id,
-    //         'automatic_payment_methods' => [
-    //             'enabled' => 'true',
-    //         ],
-    //     ]);
-    //     return $response->withJson([
-    //         'paymentIntent' => $paymentIntent->client_secret,
-    //         'ephemeralKey' => $ephemeralKey->secret,
-    //         'customer' => $customer->id,
-    //         'publishableKey' => 'pk_test_oKhSR5nslBRnBZpjO6KuzZeX'
-    //     ])->withStatus(200);
-    // }
+
+    public function intent(Request $request)
+    {
+        $request->validate([
+            'price' => 'required',
+            'post_id' => 'required'
+        ]);
+        $payment = $request->user()->payWith(
+            $request->price,
+            ['card', 'bancontact'],
+            [
+                'payment_method_types' => ['card', 'bancontact'],
+                'metadata' => [
+                    'user_id' => $request->user()->id,
+                    'post_id' => $request->post_id,
+                    'price' => $request->price,
+                    'currency' => 'EUR'
+                ],
+            ]
+        );
+        return $payment;
+    }
 }
