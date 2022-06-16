@@ -22,7 +22,6 @@ class PaymentController extends Controller
                     'user_id' => $request->user()->id,
                     'post_id' => $request->post_id,
                     'price' => $request->price,
-                    'currency' => 'EUR'
                 ],
             ]
         );

@@ -81,6 +81,62 @@ class PostsController extends Controller
         return response()->json($arrayPosts, 200);
     }
 
+    public function index_followers()
+    {
+        $user_id = auth()?->user()?->id;
+        $posts = Post::orderBy('created_at', 'desc')->get()->all();
+        $arrayPosts = [];
+
+        foreach ($posts as $post) {
+            $exist = Followers::where('user_id', $user_id)->where('follower_id', $post->id)->first();
+            if ($exist) {
+
+                $userInfo = User::where('id', $post->user_id)->first();
+                $likes = Like::where('post_id', $post->id)->get();
+                $comments = Comment::where('post_id', $post->id)->get();
+                $countLikes = Like::where('post_id', $post->id)->count();
+
+                $likeExist = Like::where([
+                    ['post_id', '=', $post->id],
+                    ['user_id', '=', $user_id]
+                ])->exists();
+
+                $followerExist = Followers::where([
+                    ['follower_id', '=', $post->id],
+                    ['user_id', '=', $user_id]
+                ])->exists();
+
+                $arrayComments = [];
+                foreach ($comments as $comment) {
+                    $commentInfo = Post::where('user_id', $comment->user_id)->first();
+                    $likesComment = Like::where('comment_id', $comment->id)->get();
+
+                    array_push($arrayComments, [
+                        "author" => $commentInfo,
+                        "comment" => $comment,
+                        "likes" => $likesComment,
+                    ]);
+                }
+
+                $post = [
+                    "author" => $userInfo,
+                    "posts" => $post,
+                    "likes" => $likes,
+                    "comments" => $arrayComments,
+                ];
+
+                if ($user_id !== null) {
+                    $post['likeExist'] = $likeExist;
+                    $post['nblike'] = $countLikes;
+                }
+
+
+                array_push($arrayPosts, $post);
+            }
+        }
+        return response()->json($arrayPosts, 200);
+    }
+
     public function create(Request $request)
     {
         $request->validate([

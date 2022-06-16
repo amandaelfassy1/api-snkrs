@@ -26,6 +26,7 @@ use App\Http\Controllers\PaymentController;
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::get('auth/posts', [PostsController::class, 'index']);
+    Route::get('auth/posts/followers', [PostsController::class, 'index_followers']);
     Route::get('auth/posts/user', [PostsController::class, 'showProfilUser']);
     Route::get('auth/posts/user/{user_id}', [PostsController::class, 'show']);
     Route::get('auth/post/{id}', [PostsController::class, 'showById']);
