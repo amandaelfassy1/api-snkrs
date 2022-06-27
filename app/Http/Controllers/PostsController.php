@@ -117,7 +117,6 @@ class PostsController extends Controller
                         "likes" => $likesComment,
                     ]);
                 }
-
                 $post = [
                     "author" => $userInfo,
                     "posts" => $post,
