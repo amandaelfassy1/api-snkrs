@@ -88,7 +88,7 @@ class PostsController extends Controller
         $arrayPosts = [];
 
         foreach ($posts as $post) {
-            $exist = Followers::where('user_id', $user_id)->where('follower_id', $post->id)->first();
+            $exist = auth()->user()->following()->where('follower_id', $post->user_id)->exists();
             if ($exist) {
 
                 $userInfo = User::where('id', $post->user_id)->first();
